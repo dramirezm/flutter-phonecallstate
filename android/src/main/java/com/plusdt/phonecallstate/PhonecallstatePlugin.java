@@ -28,7 +28,7 @@ public class PhonecallstatePlugin implements MethodCallHandler {
   private final MethodChannel channel;
   private Activity activity;
   private static final String TAG = "KORDON";//MyClass.class.getSimpleName();
-
+  private boolean callStateListenerRegistered = false;
   TelephonyManager tm;
 
   //private PhoneStateListener mPhoneListener;
@@ -48,8 +48,18 @@ public class PhonecallstatePlugin implements MethodCallHandler {
     this.channel = channel;
     this.channel.setMethodCallHandler(this);
 
-    TelephonyManager tm = (TelephonyManager) this.activity.getSystemService(Context.TELEPHONY_SERVICE);
-    tm.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+     if (!callStateListenerRegistered) {
+      TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+          telephonyManager.registerTelephonyCallback(getMainExecutor(), callStateListener);
+          callStateListenerRegistered = true;
+        }
+      } else {
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        callStateListenerRegistered = true;
+      }
+    }
 
   }
 
