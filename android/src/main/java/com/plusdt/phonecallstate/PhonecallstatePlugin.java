@@ -10,9 +10,9 @@ import android.os.Build;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.os.RemoteException;
 import androidx.core.content.ContextCompat;
-import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
 
 import android.app.Activity;
 import io.flutter.app.FlutterActivity;
@@ -54,14 +54,14 @@ public class PhonecallstatePlugin implements MethodCallHandler {
     this.channel.setMethodCallHandler(this);
 
      if (!callStateListenerRegistered) {
-      TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+      TelephonyManager telephonyManager = (TelephonyManager) this.activity.getSystemService(TELEPHONY_SERVICE);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
           telephonyManager.registerTelephonyCallback(getMainExecutor(), callStateListener);
           callStateListenerRegistered = true;
         }
       } else {
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
         callStateListenerRegistered = true;
       }
     }
