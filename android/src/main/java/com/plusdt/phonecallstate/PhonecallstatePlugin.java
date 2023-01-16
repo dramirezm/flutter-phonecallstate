@@ -48,8 +48,8 @@ public class PhonecallstatePlugin implements MethodCallHandler {
     this.channel = channel;
     this.channel.setMethodCallHandler(this);
 
-    TelephonyManager tm = (TelephonyManager) this.activity.getSystemService(Context.TELEPHONY_SERVICE);
-    tm.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+//     TelephonyManager tm = (TelephonyManager) this.activity.getSystemService(Context.TELEPHONY_SERVICE);
+//     tm.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
 
   }
 
