@@ -13,6 +13,7 @@ import android.content.Context;
 
 import android.app.Activity;
 import io.flutter.app.FlutterActivity;
+import androidx.core.content.ContextCompat;
 
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -54,7 +55,7 @@ public class PhonecallstatePlugin implements MethodCallHandler {
 
       if (Build.VERSION.SDK_INT >= 31)
       {
-          if(checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+          if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
               telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
       }
       else // no permission needed
