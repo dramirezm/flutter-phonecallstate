@@ -55,7 +55,7 @@ public class PhonecallstatePlugin implements MethodCallHandler {
 
       if (Build.VERSION.SDK_INT >= 31)
       {
-          if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+          if(ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
               telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
       }
       else // no permission needed
