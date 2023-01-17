@@ -1,18 +1,15 @@
 package com.plusdt.phonecallstate;
 
 
-import static android.content.Context.TELEPHONY_SERVICE;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
-
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import androidx.core.content.ContextCompat;
-import android.os.Build;
-import android.os.Bundle;
+import android.os.RemoteException;
+
+import android.content.Context;
 
 import android.app.Activity;
 import io.flutter.app.FlutterActivity;
@@ -33,7 +30,7 @@ public class PhonecallstatePlugin implements MethodCallHandler {
   private final MethodChannel channel;
   private Activity activity;
   private static final String TAG = "KORDON";//MyClass.class.getSimpleName();
-  private boolean callStateListenerRegistered = false;
+
   TelephonyManager tm;
 
   //private PhoneStateListener mPhoneListener;
@@ -53,18 +50,16 @@ public class PhonecallstatePlugin implements MethodCallHandler {
     this.channel = channel;
     this.channel.setMethodCallHandler(this);
 
-     if (!callStateListenerRegistered) {
-      TelephonyManager telephonyManager = (TelephonyManager) this.activity.getSystemService(TELEPHONY_SERVICE);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-          telephonyManager.registerTelephonyCallback(getMainExecutor(), callStateListener);
-          callStateListenerRegistered = true;
-        }
-      } else {
-        telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
-        callStateListenerRegistered = true;
+      TelephonyManager telephonyManager = (TelephonyManager) this.activity.getSystemService(Context.TELEPHONY_SERVICE);
+
+      if (Build.VERSION.SDK_INT >= 31)
+      {
+          if(checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+              telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
       }
-    }
+      else // no permission needed
+          telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+
 
   }
 
