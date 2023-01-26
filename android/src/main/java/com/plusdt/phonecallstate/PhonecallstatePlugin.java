@@ -14,6 +14,7 @@ import android.content.Context;
 import android.app.Activity;
 import io.flutter.app.FlutterActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
 
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -51,12 +52,16 @@ public class PhonecallstatePlugin implements MethodCallHandler {
     this.channel = channel;
     this.channel.setMethodCallHandler(this);
 
-      TelephonyManager telephonyManager = (TelephonyManager) this.activity.getSystemService(Context.TELEPHONY_SERVICE);
+          TelephonyManager telephonyManager = (TelephonyManager) this.activity.getSystemService(Context.TELEPHONY_SERVICE);
 
-      if (Build.VERSION.SDK_INT >= 31)
+      if (Build.VERSION.SDK_INT >= 30)
       {
-          if(ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
-              telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+        ActivityCompat.requestPermissions(this.activity, new String[]{Manifest.permission.READ_PHONE_NUMBERS}, 100);
+        if(ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED){
+//          if(ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED) {
+            telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+//          }
+          }
       }
       else // no permission needed
           telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
