@@ -52,12 +52,11 @@ public class PhonecallstatePlugin implements MethodCallHandler {
     this.channel = channel;
     this.channel.setMethodCallHandler(this);
 
-          TelephonyManager telephonyManager = (TelephonyManager) this.activity.getSystemService(Context.TELEPHONY_SERVICE);
+         TelephonyManager telephonyManager = (TelephonyManager) this.activity.getSystemService(Context.TELEPHONY_SERVICE);
 
       if (Build.VERSION.SDK_INT >= 30)
       {
-        ActivityCompat.requestPermissions(this.activity, new String[]{Manifest.permission.READ_PHONE_NUMBERS}, 100);
-        if(ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED){
+        if(ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
 //          if(ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED) {
             telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
 //          }
@@ -65,6 +64,9 @@ public class PhonecallstatePlugin implements MethodCallHandler {
       }
       else // no permission needed
           telephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+
+
+//    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_NUMBERS}, 100);
 
 
   }
